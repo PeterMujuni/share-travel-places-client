@@ -6,8 +6,10 @@ import {
 	RouterProvider,
 } from "react-router-dom";
 import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
+import NewPlace from "./places/pages/NewPlace"
+import UpdatePlace from "./places/pages/UpdatePlace";
 import UserPlaces from "./places/pages/UserPlaces";
+import Auth from "./user/pages/Auth";
 import ErrorPage from "./error-page";
 import RootLayout from "./layouts/RootLayout";
 
@@ -29,6 +31,14 @@ const router = createBrowserRouter(
 			<Route
 				path="/:uid/places"
 				element={<UserPlaces />}
+			/>
+			<Route
+				path="/places/:pid"
+				element={<UpdatePlace />}
+			/>
+			<Route
+				path="/auth"
+				element={<Auth />}
 			/>
 		</Route>
 	)
