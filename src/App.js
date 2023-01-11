@@ -1,4 +1,4 @@
-import "./App.css";
+import { useState, useCallback } from "react";
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
@@ -6,12 +6,14 @@ import {
 	RouterProvider,
 } from "react-router-dom";
 import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace"
+import NewPlace from "./places/pages/NewPlace";
 import UpdatePlace from "./places/pages/UpdatePlace";
 import UserPlaces from "./places/pages/UserPlaces";
 import Auth from "./user/pages/Auth";
 import ErrorPage from "./error-page";
 import RootLayout from "./layouts/RootLayout";
+import { AuthContext } from "./shared/context/auth-context";
+import "./App.css";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -45,7 +47,21 @@ const router = createBrowserRouter(
 );
 
 function App() {
-	return <RouterProvider router={router} />;
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+	const login = useCallback(() => { 
+		setIsLoggedIn(true)
+	 }, [])
+
+	const logout = useCallback(() => { 
+		setIsLoggedIn(false)
+	 }, [])
+
+	return (
+		<AuthContext.Provider value={{isLoggedIn: isLoggedIn, login: login, logout: logout}}>
+			<RouterProvider router={router} />;
+		</AuthContext.Provider>
+	);
 }
 
 export default App;
