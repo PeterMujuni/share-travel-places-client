@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
+import Button from "../FormElements/Button";
 import "./NavLinks.css";
 
 const NavLinks = (props) => {
@@ -21,7 +22,7 @@ const NavLinks = (props) => {
 					<NavLink to="/places/new">ADD PLACES</NavLink>
 				</li>
 			)}
-			{!auth.isLoggedIn && (
+			{!auth.isLoggedIn ? (
 				<li>
 					<NavLink
 						to="/auth"
@@ -29,6 +30,12 @@ const NavLinks = (props) => {
 					>
 						AUTHENTICATE
 					</NavLink>
+				</li>
+			) : (
+				<li>
+					<Button onClick={auth.logout}>
+						LOGOUT
+					</Button>
 				</li>
 			)}
 		</ul>

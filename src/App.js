@@ -1,9 +1,10 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
 	Route,
 	RouterProvider,
+	Navigate
 } from "react-router-dom";
 import Users from "./user/pages/Users";
 import NewPlace from "./places/pages/NewPlace";
@@ -15,51 +16,115 @@ import RootLayout from "./layouts/RootLayout";
 import { AuthContext } from "./shared/context/auth-context";
 import "./App.css";
 
-const router = createBrowserRouter(
-	createRoutesFromElements(
-		<Route
-			path="/"
-			element={<RootLayout />}
-			errorElement={<ErrorPage />}
-		>
-			<Route
-				path="/"
-				element={<Users />}
-			/>
-			<Route
-				path="/places/new"
-				element={<NewPlace />}
-			/>
-			<Route
-				path="/:uid/places"
-				element={<UserPlaces />}
-			/>
-			<Route
-				path="/places/:pid"
-				element={<UpdatePlace />}
-			/>
-			<Route
-				path="/auth"
-				element={<Auth />}
-			/>
-		</Route>
-	)
-);
+// const router = createBrowserRouter(
+// 	createRoutesFromElements(
+// 		<Route
+// 			path="/"
+// 			element={<RootLayout />}
+// 			errorElement={<ErrorPage />}
+// 		>
+// 			<Route
+// 				path="/"
+// 				element={<Users />}
+// 			/>
+// 			<Route
+// 				path="/places/new"
+// 				element={<NewPlace />}
+// 			/>
+// 			<Route
+// 				path="/:uid/places"
+// 				element={<UserPlaces />}
+// 			/>
+// 			<Route
+// 				path="/places/:pid"
+// 				element={<UpdatePlace />}
+// 			/>
+// 			<Route
+// 				path="/auth"
+// 				element={<Auth />}
+// 			/>
+// 		</Route>
+// 	)
+// );
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	const login = useCallback(() => { 
-		setIsLoggedIn(true)
-	 }, [])
+	const login = useCallback(() => {
+		setIsLoggedIn(true);
+	}, []);
 
-	const logout = useCallback(() => { 
-		setIsLoggedIn(false)
-	 }, [])
+	const logout = useCallback(() => {
+		setIsLoggedIn(false);
+	}, []);
+
+	let routes;
+
+	if (isLoggedIn) {
+		routes = createBrowserRouter(
+			createRoutesFromElements(
+				<Route
+					element={<RootLayout />}
+					errorElement={<ErrorPage />}
+				>
+					<Route
+						index
+						element={<Users />}
+					/>
+					<Route
+						path="/places/new"
+						element={<NewPlace />}
+					/>
+					<Route
+						path="/:uid/places"
+						element={<UserPlaces />}
+					/>
+					<Route
+						path="/places/:pid"
+						element={<UpdatePlace />}
+					/>
+					<Route
+						path="/auth"
+						element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}
+					/>
+				</Route>
+			)
+		);
+	} else {
+		routes = createBrowserRouter(
+			createRoutesFromElements(
+				<Route
+					element={<RootLayout />}
+					errorElement={<ErrorPage />}
+				>
+					<Route
+						index
+						element={<Users />}
+					/>
+					
+					<Route
+						path="/:uid/places"
+						element={<UserPlaces />}
+					/>
+					
+					<Route
+						path="/auth"
+						element={<Auth />}
+					/>
+					<Route
+						path="*"
+						element={<Navigate to="/auth" />}
+					/>
+				</Route>
+			)
+		);
+	}
 
 	return (
-		<AuthContext.Provider value={{isLoggedIn: isLoggedIn, login: login, logout: logout}}>
-			<RouterProvider router={router} />;
+		<AuthContext.Provider
+			value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+		>
+			<RouterProvider router={routes} />;
 		</AuthContext.Provider>
 	);
 }
