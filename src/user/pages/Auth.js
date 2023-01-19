@@ -12,7 +12,7 @@ import {
 import "./Auth.css";
 
 const Auth = () => {
-	const auth = useContext(AuthContext)
+	const auth = useContext(AuthContext);
 
 	const [isLogin, setIsLogin] = useState(true);
 	const [formState, inputHandler, setFormData] = useForm(
@@ -29,10 +29,37 @@ const Auth = () => {
 		false
 	);
 
-	const authSubmitHandler = (e) => {
+	const authSubmitHandler = async (e) => {
 		e.preventDefault();
-		console.log(formState.inputs);
-		auth.login()
+
+		if (isLogin) {
+		} else {
+			try {
+				const response = await fetch(
+					"http://localhost:5000/api/users/signup",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name: formState.inputs.name.value,
+							email: formState.inputs.email.value,
+							password: formState.inputs.password.value,
+						}),
+					}
+				);
+
+				const responseData = await response.json()
+				console.log(responseData);
+
+			} catch (error) {
+				console.log(error)
+			}
+			
+		}
+
+		auth.login();
 	};
 
 	const switchModeHandler = () => {
