@@ -20,7 +20,7 @@ const ModalOverlay = (props) => {
 					props.onSubmit ? props.onSubmit : (e) => e.preventDefault()
 				}
 			>
-				<div className={`modal_content ${props.contentClass}`}>
+				<div className={`modal__content ${props.contentClass}`}>
 					{props.children}
 				</div>
 				<footer className={`modal__footer ${props.footer}`}>
@@ -29,10 +29,7 @@ const ModalOverlay = (props) => {
 			</form>
 		</div>
 	);
-	return createPortal(
-		content,
-		document.getElementById("modal-hook")
-	);
+	return createPortal(content, document.getElementById("modal-hook"));
 };
 
 const Modal = (props) => {
@@ -44,10 +41,10 @@ const Modal = (props) => {
 				mountOnEnter
 				unmountOnExit
 				timeout={200}
-                classNames="modal"
+				classNames="modal"
 			>
-                <ModalOverlay {...props}/>
-            </CSSTransition>
+				<ModalOverlay {...props} />
+			</CSSTransition>
 		</>
 	);
 };
