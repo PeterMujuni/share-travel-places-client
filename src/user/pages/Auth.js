@@ -39,7 +39,7 @@ const Auth = () => {
 		e.preventDefault();
 		if (isLogin) {
 			try {
-				const response = await sendRequest(
+				const responseData = await sendRequest(
 					"http://localhost:5000/api/users/login",
 					"POST",
 					{ "Content-Type": "application/json" },
@@ -48,11 +48,11 @@ const Auth = () => {
 						password: formState.inputs.password.value,
 					})
 				);
-				auth.login();
+				auth.login(responseData.user.id);
 			} catch (error) {}
 		} else {
 			try {
-				await sendRequest(
+				const responseData = await sendRequest(
 					"http://localhost:5000/api/users/signup",
 					"POST",
 					{
@@ -64,7 +64,7 @@ const Auth = () => {
 						password: formState.inputs.password.value,
 					})
 				);
-				auth.login();
+				auth.login(responseData.user.id);
 			} catch (error) {}
 		}
 	};

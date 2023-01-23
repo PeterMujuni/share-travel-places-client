@@ -4,7 +4,7 @@ import {
 	createRoutesFromElements,
 	Route,
 	RouterProvider,
-	Navigate
+	Navigate,
 } from "react-router-dom";
 import Users from "./user/pages/Users";
 import NewPlace from "./places/pages/NewPlace";
@@ -49,13 +49,16 @@ import "./App.css";
 
 function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [userId, setUserId] = useState();
 
-	const login = useCallback(() => {
+	const login = useCallback((uid) => {
 		setIsLoggedIn(true);
+		setUserId(uid);
 	}, []);
 
 	const logout = useCallback(() => {
 		setIsLoggedIn(false);
+		setUserId(null)
 	}, []);
 
 	let routes;
@@ -101,12 +104,12 @@ function App() {
 						index
 						element={<Users />}
 					/>
-					
+
 					<Route
 						path="/:uid/places"
 						element={<UserPlaces />}
 					/>
-					
+
 					<Route
 						path="/auth"
 						element={<Auth />}
@@ -122,7 +125,7 @@ function App() {
 
 	return (
 		<AuthContext.Provider
-			value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+			value={{ isLoggedIn: isLoggedIn, userId: userId, login: login, logout: logout }}
 		>
 			<RouterProvider router={routes} />;
 		</AuthContext.Provider>

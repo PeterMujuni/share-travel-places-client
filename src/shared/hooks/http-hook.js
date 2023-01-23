@@ -12,7 +12,7 @@ export const useHttpClient = () => {
 
 			const httpAbortCtrl = new AbortController();
 			activeHttpRequests.current.push(httpAbortCtrl);
-
+			
 			try {
 				const response = await fetch(url, {
 					method,
@@ -34,13 +34,13 @@ export const useHttpClient = () => {
 				setIsLoading(false);
 				return responseData;
 			} catch (error) {
-				setIsLoading(false);
-				setError(error.message);
-				throw error;
+				if (!error.message === "The user aborted a request.") {
+					setIsLoading(false);
+					setError(error.message);
+					throw error;
+				}
 			}
-		},
-		[]
-	);
+		},[]);
 
 	const clearError = () => {
 		setError(null);
