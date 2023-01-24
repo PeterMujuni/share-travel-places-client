@@ -31,15 +31,17 @@ export const useHttpClient = () => {
 				if (!response.ok) {
 					throw new Error(responseData.message);
 				}
+				
 				setIsLoading(false);
 				return responseData;
-			} catch (error) {
-				if (!error.message === "The user aborted a request.") {
+			} catch (err) {
+				if (err.message !== "The user aborted a request.") {
 					setIsLoading(false);
-					setError(error.message);
-					throw error;
+					setError(err.message);
+					throw err;
 				}
 			}
+			
 		},[]);
 
 	const clearError = () => {
