@@ -35,14 +35,15 @@ const PlaceItem = (props) => {
 		try {
 			await sendRequest(
 				`http://localhost:5000/api/places/${props.id}`,
-				"DELETE"
+				"DELETE",
+				{ Authorization: "Bearer " + auth.token }
 			);
 			props.onDelete(props.id);
 		} catch (error) {}
 	};
 
 	return (
-		<>
+		<React.Fragment>
 			<ErrorModal
 				error={error}
 				onClear={clearError}
@@ -67,7 +68,7 @@ const PlaceItem = (props) => {
 				show={showConfirmModal}
 				onCancel={cancelDeleteHandler}
 				header="Are you sure?"
-				footerClass="place-item__modal-actions"
+				footerClass="place-item__modal-actions delete-buttons"
 				footer={
 					<React.Fragment>
 						<Button
@@ -92,7 +93,7 @@ const PlaceItem = (props) => {
 				<Card className="place-item__content">
 					<div className="place-item__image">
 						<img
-							src={props.image}
+							src={`http://localhost:5000/${props.image}`}
 							alt={props.title}
 						/>
 					</div>
@@ -108,24 +109,21 @@ const PlaceItem = (props) => {
 						>
 							VIEW ON MAP
 						</Button>
-						{auth.userId ===
-							props.creatorId && (
-								<React.Fragment>
-									<Button to={`/places/${props.id}`}>
-										EDIT
-									</Button>
-									<Button
-										danger
-										onClick={showDeleteWarningHandler}
-									>
-										DELETE
-									</Button>
-								</React.Fragment>
-							)}
+						{auth.userId === props.creatorId && (
+							<React.Fragment>
+								<Button to={`/places/${props.id}`}>EDIT</Button>
+								<Button
+									danger
+									onClick={showDeleteWarningHandler}
+								>
+									DELETE
+								</Button>
+							</React.Fragment>
+						)}
 					</div>
 				</Card>
 			</li>
-		</>
+		</React.Fragment>
 	);
 };
 

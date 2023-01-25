@@ -52,7 +52,7 @@ const Auth = () => {
 						password: formState.inputs.password.value,
 					})
 				);
-				auth.login(responseData.user.id);
+				auth.login(responseData.userId, responseData.token);
 			} catch (err) {
 				console.log(error);
 			}
@@ -72,7 +72,7 @@ const Auth = () => {
 					},
 					formData
 				);
-				auth.login(responseData.user.id);
+				auth.login(responseData.userId, responseData.token);
 			} catch (error) {}
 		}
 	};
@@ -133,6 +133,7 @@ const Auth = () => {
 						<ImageUploader
 							id="image"
 							onInput={inputHandler}
+							errorText="Please provide an image"
 						/>
 					)}
 					<Input

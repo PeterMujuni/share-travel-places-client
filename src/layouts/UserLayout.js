@@ -4,12 +4,12 @@ import MainNavigation from "../shared/components/Navigation/MainNavigation";
 
 const RootLayout = () => {
 	return (
-		<>
+		<React.Fragment>
 			<MainNavigation />
 			<main>
 				<Outlet />
 			</main>
-		</>
+		</React.Fragment>
 	);
 };
 

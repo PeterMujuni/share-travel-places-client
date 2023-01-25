@@ -17,15 +17,16 @@ const UserPlaces = () => {
 					`http://localhost:5000/api/places/user/${uid}`
 				);
 				setLoadedPlaces(responseData.places);
-			} catch (error) {}
+			} catch (error) {
+				console.log(error)
+			}
 		};
-
 		fetchPlaces();
 	}, [sendRequest, uid]);
 
 	const placeDeletedHandler = (deletedPlaceId) => {
 		setLoadedPlaces((prevPlaces) =>
-			prevPlaces.filter(place => place.id !== deletedPlaceId)
+			prevPlaces.filter((place) => place.id !== deletedPlaceId)
 		);
 	};
 

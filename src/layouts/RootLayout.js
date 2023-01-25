@@ -1,16 +1,16 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import MainNavigation from '../shared/components/Navigation/MainNavigation'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import MainNavigation from "../shared/components/Navigation/MainNavigation";
 
 const RootLayout = () => {
-  return (
-		<>
+	return (
+		<React.Fragment>
 			<MainNavigation />
 			<main>
 				<Outlet />
 			</main>
-		</>
-  );
-}
+		</React.Fragment>
+	);
+};
 
-export default RootLayout
+export default RootLayout;

@@ -5,6 +5,7 @@ import Button from "../../shared/components/FormElements/Button";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUploader from "../../shared/components/FormElements/ImageUploader";
 import {
 	VALIDATOR_MINLENGTH,
 	VALIDATOR_REQUIRE,
@@ -15,7 +16,7 @@ import "./PlaceForm.css";
 
 const NewPlace = () => {
 	const auth = useContext(AuthContext);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const { error, isLoading, sendRequest, clearError } = useHttpClient();
 	const [formState, inputHandler] = useForm(
 		{
@@ -31,6 +32,10 @@ const NewPlace = () => {
 				value: "",
 				isValid: false,
 			},
+			image: {
+				value: null,
+				isValid: false,
+			},
 		},
 		false
 	);
@@ -38,19 +43,20 @@ const NewPlace = () => {
 	const placeSubmitHandler = async (e) => {
 		e.preventDefault();
 		try {
+			const formData = new FormData()
+			formData.append("title", formState.inputs.title.value);
+			formData.append("description", formState.inputs.description.value);
+			formData.append("address", formState.inputs.address.value);
+			formData.append("image", formState.inputs.image.value)
+
 			await sendRequest(
 				"http://localhost:5000/api/places",
 				"POST",
-				{ "Content-Type": "application/json" },
-				JSON.stringify({
-					title: formState.inputs.title.value,
-					description: formState.inputs.description.value,
-					address: formState.inputs.address.value,
-					creator: auth.userId,
-				})
+				{ Authorization: "Bearer " + auth.token },
+				formData
 			);
 			// Redirect to another page
-			navigate("/")
+			navigate("/");
 		} catch (error) {}
 	};
 
@@ -89,6 +95,11 @@ const NewPlace = () => {
 					validators={[VALIDATOR_REQUIRE()]}
 					errorText="Please enter a valid address."
 					onInput={inputHandler}
+				/>
+				<ImageUploader
+					id="image"
+					onInput={inputHandler}
+					errorText="Please provide an image"
 				/>
 				<Button
 					type="submit"

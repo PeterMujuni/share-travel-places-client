@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
@@ -14,6 +14,7 @@ import Auth from "./user/pages/Auth";
 import ErrorPage from "./error-page";
 import RootLayout from "./layouts/RootLayout";
 import { AuthContext } from "./shared/context/auth-context";
+import { useAuth } from "./shared/hooks/auth-hook";
 import "./App.css";
 
 // const router = createBrowserRouter(
@@ -48,22 +49,11 @@ import "./App.css";
 // );
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [userId, setUserId] = useState();
-
-	const login = useCallback((uid) => {
-		setIsLoggedIn(true);
-		setUserId(uid);
-	}, []);
-
-	const logout = useCallback(() => {
-		setIsLoggedIn(false);
-		setUserId(null)
-	}, []);
+	const { token, login, logout, userId } = useAuth();
 
 	let routes;
 
-	if (isLoggedIn) {
+	if (token) {
 		routes = createBrowserRouter(
 			createRoutesFromElements(
 				<Route
@@ -88,7 +78,7 @@ function App() {
 					/>
 					<Route
 						path="/auth"
-						element={!isLoggedIn ? <Auth /> : <Navigate to="/" />}
+						element={!token ? <Auth /> : <Navigate to="/" />}
 					/>
 				</Route>
 			)
@@ -125,7 +115,13 @@ function App() {
 
 	return (
 		<AuthContext.Provider
-			value={{ isLoggedIn: isLoggedIn, userId: userId, login: login, logout: logout }}
+			value={{
+				isLoggedIn: !!token,
+				token,
+				userId: userId,
+				login: login,
+				logout: logout,
+			}}
 		>
 			<RouterProvider router={routes} />;
 		</AuthContext.Provider>

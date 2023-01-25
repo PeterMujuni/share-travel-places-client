@@ -56,28 +56,16 @@ const UpdatePlace = () => {
 		fetchPlace();
 	}, [sendRequest, placeId, setFormData]);
 
-	// useEffect(() => {
-	// 	if (identifiedPlace) {
-	// 		setFormData({
-	// 			title: {
-	// 				value: identifiedPlace.title,
-	// 				isValid: true,
-	// 			},
-	// 			description: {
-	// 				value: identifiedPlace.description,
-	// 				isValid: true,
-	// 			},
-	// 		});
-	// 	}
-	// }, [setFormData, identifiedPlace]);
-
 	const placeUpdateSubmitHandler = async (e) => {
 		e.preventDefault();
 		try {
 			await sendRequest(
 				`http://localhost:5000/api/places/${placeId}`,
 				"PATCH",
-				{ "Content-Type": "application/json" },
+				{ 
+					"Content-Type": "application/json",
+					Authorization: "Bearer " + auth.token
+				},
 				JSON.stringify({
 					title: formState.inputs.title.value,
 					description: formState.inputs.description.value,
