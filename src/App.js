@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Suspense } from "react";
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
@@ -7,15 +7,21 @@ import {
 	Navigate,
 } from "react-router-dom";
 import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
-import UpdatePlace from "./places/pages/UpdatePlace";
-import UserPlaces from "./places/pages/UserPlaces";
-import Auth from "./user/pages/Auth";
+// import NewPlace from "./places/pages/NewPlace";
+// import UpdatePlace from "./places/pages/UpdatePlace";
+// import UserPlaces from "./places/pages/UserPlaces";
+// import Auth from "./user/pages/Auth";
 import ErrorPage from "./error-page";
 import RootLayout from "./layouts/RootLayout";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import "./App.css";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+
+const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
+const UserPlaces = React.lazy(() => import("./places/pages/UserPlaces"));
+const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
+const Auth = React.lazy(() => import("./user/pages/Auth"));
 
 // const router = createBrowserRouter(
 // 	createRoutesFromElements(
@@ -123,7 +129,9 @@ function App() {
 				logout: logout,
 			}}
 		>
-			<RouterProvider router={routes} />;
+			<Suspense fallback={<div className="center"><LoadingSpinner /></div>}>
+				<RouterProvider router={routes} />;
+			</Suspense>
 		</AuthContext.Provider>
 	);
 }
